@@ -53,24 +53,29 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             /// show data
-            Container(
-              alignment: Alignment.center,
-              height: 200,
-              child: Text(_theLatestData),
+            Expanded(
+              child: Container(
+                alignment: Alignment.center,
+                height: 200,
+                color: Colors.black,
+                child: Text('recieved data:\n' + _theLatestData),
+              ),
             ),
+            _space(),
             /// data input
             TextField(
               controller: _dataInputController,
             ),
+            _space(),
             RaisedButton(
               child: Text('Send'),
               onPressed: () {
                 _sendMessageToServer(_dataInputController.text);
               },
             ),
+            _space(),
             Row(
               children: [
                 /// host input
@@ -90,6 +95,7 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
                 )
               ],
             ),
+            _space(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -112,6 +118,13 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _space({bool vertical = true}) {
+    return SizedBox(
+      height: vertical ? 8 : 0,
+      width: vertical ? 0 : 8,
     );
   }
 }
