@@ -10,6 +10,8 @@ class ScreenSocketServer extends StatefulWidget  {
 
 class _ScreenSocketServerState extends State<ScreenSocketServer> {
 
+  TextEditingController _dataInputController = TextEditingController();
+
   ServerSocket _serverSocket;
 
   /// Connections for each client
@@ -32,6 +34,12 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
         });
       });
     });
+  }
+
+  void _sendMessageToAllClients(String message) {
+    for (int i = 0; i < _sockets.length; i++) {
+      _sockets[i].write(message);
+    }
   }
 
   Future _stopServer() async {
@@ -59,6 +67,17 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
             height: 200,
             width: MediaQuery.of(context).size.width,
             child: Text(_theLatestData),
+          ),
+          /// data input
+          TextField(
+            controller: _dataInputController,
+          ),
+          /// send data button
+          RaisedButton(
+            child: Text('send'),
+            onPressed: () {
+              _sendMessageToAllClients(_dataInputController.text);
+            },
           ),
           /// start server
           RaisedButton(
