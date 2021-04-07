@@ -7,6 +7,9 @@ class ScreenSocketClient extends StatefulWidget {
 
 class _ScreenSocketClientState extends State<ScreenSocketClient> {
 
+  TextEditingController _hostController = TextEditingController();
+  TextEditingController _portController = TextEditingController();
+
   Future _connect() async {
     //todo connect to server
   }
@@ -29,6 +32,25 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
             alignment: Alignment.center,
             height: 200,
             child: Text(''),
+          ),
+          Row(
+            children: [
+              /// host input
+              Expanded(
+                flex: 3,
+                child: TextField(
+                  controller: _hostController,
+                ),
+              ),
+              SizedBox(width: 16,),
+              /// port input
+              Expanded(
+                flex: 2,
+                child: TextField(
+                  controller: _portController,
+                ),
+              )
+            ],
           ),
           /// connect
           RaisedButton(
