@@ -11,6 +11,8 @@ class ScreenSocketServer extends StatefulWidget  {
 class _ScreenSocketServerState extends State<ScreenSocketServer> {
 
   ServerSocket _serverSocket;
+
+  /// Connections for each client
   List<Socket> _sockets = List();
 
   String _theLatestData = '';
@@ -19,11 +21,11 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
     _serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
     print('LocalHostConnectEvent event, ip: ${_serverSocket.address.toString()}:${_serverSocket.port.toString()}');
     _serverSocket.listen((Socket socket) {
-      // this function run when connect a socket client.
+      // this function run when connect a client.
       socket.write('connection success');
       _sockets.add(socket);
       socket.listen((Uint8List dataAsByte) {
-        // this function run when has data from socket client.
+        // this function run when has data from client.
         String data = new String.fromCharCodes(dataAsByte);
         setState(() {
           _theLatestData = data;
