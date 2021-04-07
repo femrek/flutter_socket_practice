@@ -10,7 +10,7 @@ class ScreenSocketClient extends StatefulWidget {
 
 class _ScreenSocketClientState extends State<ScreenSocketClient> {
 
-  String _theLatestData = '';
+  String _receivedData = '';
 
   TextEditingController _dataInputController = TextEditingController();
 
@@ -30,7 +30,7 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
       // this function run when has data from server.
       final String data = String.fromCharCodes(dataAsByte);
       setState(() {
-        _theLatestData = data;
+        _receivedData += data + '\n';
       });
     });
   }
@@ -42,6 +42,10 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
   Future _disconnect() async {
     if (_socket != null) _socket.destroy();
     _socket = null;
+    /// clear the data
+    setState(() {
+      _receivedData = '';
+    });
   }
 
   @override
@@ -57,10 +61,13 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
             /// show data
             Expanded(
               child: Container(
-                alignment: Alignment.center,
+                alignment: Alignment.topCenter,
+                padding: EdgeInsets.all(8),
                 height: 200,
                 color: Colors.black,
-                child: Text('recieved data:\n' + _theLatestData),
+                child: SingleChildScrollView(
+                  child: Text('recieved data:\n' + _receivedData),
+                ),
               ),
             ),
             _space(),

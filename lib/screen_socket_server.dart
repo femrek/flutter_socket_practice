@@ -17,7 +17,7 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
   /// Connections for each client
   List<Socket> _sockets = List();
 
-  String _theLatestData = '';
+  String _receivedData = '';
 
   Future _startServer() async {
     _serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
@@ -30,7 +30,7 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
         // this function run when has data from client.
         String data = new String.fromCharCodes(dataAsByte);
         setState(() {
-          _theLatestData = data;
+          _receivedData += data + '\n';
         });
       });
     });
@@ -50,6 +50,10 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
       _sockets.removeAt(i);
     }
     _sockets.clear();
+    /// clear the data
+    setState(() {
+      _receivedData = '';
+    });
   }
 
   @override
@@ -65,11 +69,13 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
             /// show data
             Expanded(
               child: Container(
-                alignment: Alignment.center,
+                alignment: Alignment.topCenter,
                 height: 200,
-                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(8),
                 color: Colors.black,
-                child: Text('recieved data:\n' + _theLatestData),
+                child: SingleChildScrollView(
+                  child: Text('recieved data:\n' + _receivedData),
+                ),
               ),
             ),
             _space(),
