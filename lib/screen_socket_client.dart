@@ -34,7 +34,8 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
   }
 
   Future _disconnect() async {
-    //todo disconnect
+    if (_socket != null) _socket.destroy();
+    _socket = null;
   }
 
   @override
