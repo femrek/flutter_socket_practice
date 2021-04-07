@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ScreenSocketClient extends StatefulWidget {
   @override
@@ -74,6 +75,9 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
             /// data input
             TextField(
               controller: _dataInputController,
+              decoration: InputDecoration(
+                hintText: 'Type to send data',
+              ),
             ),
             _space(),
             /// send data

@@ -82,6 +82,9 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
             /// data input
             TextField(
               controller: _dataInputController,
+              decoration: InputDecoration(
+                hintText: 'Type to send data',
+              ),
             ),
             _space(),
             /// send data button
