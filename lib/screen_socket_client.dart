@@ -90,19 +90,24 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
                 )
               ],
             ),
-            /// connect
-            RaisedButton(
-              child: Text('Connect'),
-              onPressed: () {
-                _connect();
-              },
-            ),
-            /// disconnect
-            RaisedButton(
-              child: Text('Disconnect'),
-              onPressed: () {
-                _disconnect();
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                /// connect
+                RaisedButton(
+                  child: Text('Connect'),
+                  onPressed: () {
+                    _connect();
+                  },
+                ),
+                /// disconnect
+                RaisedButton(
+                  child: Text('Disconnect'),
+                  onPressed: () {
+                    _disconnect();
+                  },
+                ),
+              ],
             ),
           ],
         ),

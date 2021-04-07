@@ -81,19 +81,24 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
                 _sendMessageToAllClients(_dataInputController.text);
               },
             ),
-            /// start server
-            RaisedButton(
-              child: Text('Start Server'),
-              onPressed: () {
-                _startServer();
-              },
-            ),
-            /// stop server
-            RaisedButton(
-              child: Text('Stop Server'),
-              onPressed: () {
-                _stopServer();
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                /// start server
+                RaisedButton(
+                  child: Text('Start Server'),
+                  onPressed: () {
+                    _startServer();
+                  },
+                ),
+                /// stop server
+                RaisedButton(
+                  child: Text('Stop Server'),
+                  onPressed: () {
+                    _stopServer();
+                  },
+                ),
+              ],
             ),
           ],
         ),
