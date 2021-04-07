@@ -50,59 +50,62 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
       appBar: AppBar(
         title: Text('SOCKET CLIENT'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          /// show data
-          Container(
-            alignment: Alignment.center,
-            height: 200,
-            child: Text(_theLatestData),
-          ),
-          /// data input
-          TextField(
-            controller: _dataInputController,
-          ),
-          RaisedButton(
-            child: Text('Send'),
-            onPressed: () {
-              _sendMessageToServer(_dataInputController.text);
-            },
-          ),
-          Row(
-            children: [
-              /// host input
-              Expanded(
-                flex: 3,
-                child: TextField(
-                  controller: _hostController,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            /// show data
+            Container(
+              alignment: Alignment.center,
+              height: 200,
+              child: Text(_theLatestData),
+            ),
+            /// data input
+            TextField(
+              controller: _dataInputController,
+            ),
+            RaisedButton(
+              child: Text('Send'),
+              onPressed: () {
+                _sendMessageToServer(_dataInputController.text);
+              },
+            ),
+            Row(
+              children: [
+                /// host input
+                Expanded(
+                  flex: 3,
+                  child: TextField(
+                    controller: _hostController,
+                  ),
                 ),
-              ),
-              SizedBox(width: 16,),
-              /// port input
-              Expanded(
-                flex: 2,
-                child: TextField(
-                  controller: _portController,
-                ),
-              )
-            ],
-          ),
-          /// connect
-          RaisedButton(
-            child: Text('Connect'),
-            onPressed: () {
-              _connect();
-            },
-          ),
-          /// disconnect
-          RaisedButton(
-            child: Text('Disconnect'),
-            onPressed: () {
-              _disconnect();
-            },
-          ),
-        ],
+                SizedBox(width: 16,),
+                /// port input
+                Expanded(
+                  flex: 2,
+                  child: TextField(
+                    controller: _portController,
+                  ),
+                )
+              ],
+            ),
+            /// connect
+            RaisedButton(
+              child: Text('Connect'),
+              onPressed: () {
+                _connect();
+              },
+            ),
+            /// disconnect
+            RaisedButton(
+              child: Text('Disconnect'),
+              onPressed: () {
+                _disconnect();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

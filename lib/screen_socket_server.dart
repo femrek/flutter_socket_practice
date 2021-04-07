@@ -58,42 +58,45 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
       appBar: AppBar(
         title: Text('SOCKET SERVER'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          /// show data
-          Container(
-            alignment: Alignment.center,
-            height: 200,
-            width: MediaQuery.of(context).size.width,
-            child: Text(_theLatestData),
-          ),
-          /// data input
-          TextField(
-            controller: _dataInputController,
-          ),
-          /// send data button
-          RaisedButton(
-            child: Text('send'),
-            onPressed: () {
-              _sendMessageToAllClients(_dataInputController.text);
-            },
-          ),
-          /// start server
-          RaisedButton(
-            child: Text('Start Server'),
-            onPressed: () {
-              _startServer();
-            },
-          ),
-          /// stop server
-          RaisedButton(
-            child: Text('Stop Server'),
-            onPressed: () {
-              _stopServer();
-            },
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            /// show data
+            Container(
+              alignment: Alignment.center,
+              height: 200,
+              width: MediaQuery.of(context).size.width,
+              child: Text(_theLatestData),
+            ),
+            /// data input
+            TextField(
+              controller: _dataInputController,
+            ),
+            /// send data button
+            RaisedButton(
+              child: Text('send'),
+              onPressed: () {
+                _sendMessageToAllClients(_dataInputController.text);
+              },
+            ),
+            /// start server
+            RaisedButton(
+              child: Text('Start Server'),
+              onPressed: () {
+                _startServer();
+              },
+            ),
+            /// stop server
+            RaisedButton(
+              child: Text('Stop Server'),
+              onPressed: () {
+                _stopServer();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
