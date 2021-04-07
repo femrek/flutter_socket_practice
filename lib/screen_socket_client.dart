@@ -7,11 +7,11 @@ class ScreenSocketClient extends StatefulWidget {
 
 class _ScreenSocketClientState extends State<ScreenSocketClient> {
 
-  void _connect() async {
+  Future _connect() async {
     //todo connect to server
   }
 
-  void _disconnect() async {
+  Future _disconnect() async {
     //todo disconnect
   }
 
