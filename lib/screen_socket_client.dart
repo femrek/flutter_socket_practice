@@ -12,6 +12,8 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
 
   String _theLatestData = '';
 
+  TextEditingController _dataInputController = TextEditingController();
+
   TextEditingController _hostController = TextEditingController();
   TextEditingController _portController = TextEditingController();
 
@@ -33,6 +35,10 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
     });
   }
 
+  void _sendMessageToServer(String message) {
+    if (_socket != null) _socket.write(message);
+  }
+
   Future _disconnect() async {
     if (_socket != null) _socket.destroy();
     _socket = null;
@@ -52,6 +58,16 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
             alignment: Alignment.center,
             height: 200,
             child: Text(_theLatestData),
+          ),
+          /// data input
+          TextField(
+            controller: _dataInputController,
+          ),
+          RaisedButton(
+            child: Text('Send'),
+            onPressed: () {
+              _sendMessageToServer(_dataInputController.text);
+            },
           ),
           Row(
             children: [
