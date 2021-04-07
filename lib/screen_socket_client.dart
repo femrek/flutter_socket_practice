@@ -69,6 +69,7 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
               controller: _dataInputController,
             ),
             _space(),
+            /// send data
             RaisedButton(
               child: Text('Send'),
               onPressed: () {
