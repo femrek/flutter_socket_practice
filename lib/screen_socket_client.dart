@@ -32,7 +32,7 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
       _connectionState = 'connected to $host:$port';
     });
     _socket.listen((Uint8List dataAsByte) {
-      // this function run when has data from server.
+      print('data received'); // this function run when receive data.
       final String data = String.fromCharCodes(dataAsByte);
       setState(() {
         _receivedData += data + '\n';

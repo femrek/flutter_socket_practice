@@ -28,11 +28,11 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
       _serverState = 'server running, port: ${_serverSocket.port.toString()}';
     });
     _serverSocket.listen((Socket socket) {
-      // this function run when connect a client.
+      print('connect new client'); // this function run when connect a client.
       socket.write('connection success');
       _sockets.add(socket);
       socket.listen((Uint8List dataAsByte) {
-        // this function run when has data from client.
+        print('data received'); // this function run when receive data from client.
         String data = new String.fromCharCodes(dataAsByte);
         setState(() {
           _receivedData += data + '\n';
