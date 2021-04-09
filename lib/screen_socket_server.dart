@@ -10,6 +10,10 @@ class ScreenSocketServer extends StatefulWidget  {
 
 class _ScreenSocketServerState extends State<ScreenSocketServer> {
 
+  /// ui data
+  String _receivedData = '';
+  String _serverState = 'server is not running';
+
   TextEditingController _dataInputController = TextEditingController();
 
   ServerSocket _serverSocket;
@@ -17,11 +21,12 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
   /// Connections for each client
   List<Socket> _sockets = List();
 
-  String _receivedData = '';
-
   Future _startServer() async {
     _serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
     print('LocalHostConnectEvent event, ip: ${_serverSocket.address.toString()}:${_serverSocket.port.toString()}');
+    setState(() {
+      _serverState = 'server running, port: ${_serverSocket.port.toString()}';
+    });
     _serverSocket.listen((Socket socket) {
       // this function run when connect a client.
       socket.write('connection success');
@@ -53,6 +58,7 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
     /// clear the data
     setState(() {
       _receivedData = '';
+      _serverState = 'server stopped';
     });
   }
 
@@ -93,6 +99,10 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
               onPressed: () {
                 _sendMessageToAllClients(_dataInputController.text);
               },
+            ),
+            _space(),
+            Container(
+              child: Text(_serverState),
             ),
             _space(),
             Row(

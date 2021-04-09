@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class ScreenSocketClient extends StatefulWidget {
   @override
@@ -11,7 +10,9 @@ class ScreenSocketClient extends StatefulWidget {
 
 class _ScreenSocketClientState extends State<ScreenSocketClient> {
 
+  /// ui data
   String _receivedData = '';
+  String _connectionState = 'not connected';
 
   TextEditingController _dataInputController = TextEditingController();
 
@@ -27,6 +28,9 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
 
     _socket = await Socket.connect(InternetAddress.tryParse(host), port);
     print('connect to ${_socket.remoteAddress.address}:${_socket.remotePort}');
+    setState(() {
+      _connectionState = 'connected to $host:$port';
+    });
     _socket.listen((Uint8List dataAsByte) {
       // this function run when has data from server.
       final String data = String.fromCharCodes(dataAsByte);
@@ -46,6 +50,7 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
     /// clear the data
     setState(() {
       _receivedData = '';
+      _connectionState = 'disconnected';
     });
   }
 
@@ -86,6 +91,11 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
               onPressed: () {
                 _sendMessageToServer(_dataInputController.text);
               },
+            ),
+            _space(),
+            /// show connection state
+            Container(
+              child: Text(_connectionState),
             ),
             _space(),
             Row(
