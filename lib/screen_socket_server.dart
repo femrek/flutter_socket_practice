@@ -19,7 +19,7 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
   ServerSocket _serverSocket;
 
   /// Connections for each client
-  List<Socket> _sockets = List();
+  List<Socket> _sockets = [];
 
   Future _startServer() async {
     _serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
@@ -94,7 +94,7 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
             ),
             _space(),
             /// send data button
-            RaisedButton(
+            ElevatedButton(
               child: Text('send'),
               onPressed: () {
                 _sendMessageToAllClients(_dataInputController.text);
@@ -109,14 +109,14 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 /// start server
-                RaisedButton(
+                ElevatedButton(
                   child: Text('Start Server'),
                   onPressed: () {
                     _startServer();
                   },
                 ),
                 /// stop server
-                RaisedButton(
+                ElevatedButton(
                   child: Text('Stop Server'),
                   onPressed: () {
                     _stopServer();

@@ -32,14 +32,14 @@ class ScreenHome extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             /// go to server screen
-            RaisedButton(
+            ElevatedButton(
               child: Text('server'),
               onPressed: () {
                 Navigator.pushNamed(context, '/server');
               },
             ),
             /// go to client screen
-            RaisedButton(
+            ElevatedButton(
               child: Text('client'),
               onPressed: () {
                 Navigator.pushNamed(context, '/client');

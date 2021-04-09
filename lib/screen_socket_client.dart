@@ -86,7 +86,7 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
             ),
             _space(),
             /// send data
-            RaisedButton(
+            ElevatedButton(
               child: Text('Send'),
               onPressed: () {
                 _sendMessageToServer(_dataInputController.text);
@@ -122,14 +122,14 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 /// connect
-                RaisedButton(
+                ElevatedButton(
                   child: Text('Connect'),
                   onPressed: () {
                     _connect();
                   },
                 ),
                 /// disconnect
-                RaisedButton(
+                ElevatedButton(
                   child: Text('Disconnect'),
                   onPressed: () {
                     _disconnect();
