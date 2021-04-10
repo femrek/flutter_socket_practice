@@ -23,7 +23,7 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
 
   Future _startServer() async {
     _serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
-    print('LocalHostConnectEvent event, ip: ${_serverSocket.address.toString()}:${_serverSocket.port.toString()}');
+    print('port number: ${_serverSocket.port.toString()}');
     setState(() {
       _serverState = 'server running, port: ${_serverSocket.port.toString()}';
     });
