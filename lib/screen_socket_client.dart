@@ -23,10 +23,33 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
 
   Future _connect() async {
     final String host = _hostController.text;
+    final InternetAddress hostAddress = InternetAddress.tryParse(host);
     final int port = int.tryParse(_portController.text);
-    if (port == null) print('unvalid port number'); // port must be an integer
 
-    _socket = await Socket.connect(InternetAddress.tryParse(host), port);
+    /// validate host and port
+    if (hostAddress == null || port == null) {
+      String err = '';
+      if (hostAddress == null) {
+        err += 'host must be valid\n';
+        print('host is not valid');
+      }
+      if (port == null) {
+        err += 'port must be an integer\n';
+        print('port number must be integer');
+      }
+      err = err.substring(0, err.length-1); // delete the last \n 
+      setState(() { _connectionState = err; });
+      return;
+    }
+
+    try {
+      setState(() { _connectionState = 'connecting...'; });
+      _socket = await Socket.connect(hostAddress, port,);
+    } catch(e) {
+      setState(() { _connectionState = 'error when try connect'; });
+      print(e);
+      return;
+    }
     print('connect to ${_socket.remoteAddress.address}:${_socket.remotePort}');
     setState(() {
       _connectionState = 'connected to $host:$port';
