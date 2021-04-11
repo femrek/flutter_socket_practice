@@ -48,12 +48,12 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
   }
 
   Future _stopServer() async {
-    if (_serverSocket != null) _serverSocket.close(); // close server
-    _serverSocket = null;
     for (Socket socket in _sockets) { // destroy all clients sockets
       if (socket != null) socket.destroy();
     }
     _sockets.clear();
+    if (_serverSocket != null) await _serverSocket.close(); // close server
+    _serverSocket = null;
     /// clear the data
     setState(() {
       _receivedData = '';
