@@ -42,8 +42,8 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
   }
 
   void _sendMessageToAllClients(String message) {
-    for (int i = 0; i < _sockets.length; i++) {
-      _sockets[i].write(message);
+    for (Socket socket in _sockets) {
+      socket.write(message);
     }
   }
 
