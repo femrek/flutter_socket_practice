@@ -38,6 +38,7 @@ class ScreenHome extends StatelessWidget {
                 Navigator.pushNamed(context, '/server');
               },
             ),
+
             /// go to client screen
             ElevatedButton(
               child: Text('client'),
@@ -47,8 +48,7 @@ class ScreenHome extends StatelessWidget {
             )
           ],
         ),
-      )
+      ),
     );
   }
-
 }

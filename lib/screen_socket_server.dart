@@ -9,25 +9,27 @@ class ScreenSocketServer extends StatefulWidget  {
 }
 
 class _ScreenSocketServerState extends State<ScreenSocketServer> {
-
-  /// ui data
+  // ui variables
   String _receivedData = '';
-  String _serverState = 'server is not running';
+  String _serverStatus = 'server is not running';
 
+  // text input controller for data input to send to clients
   TextEditingController _dataInputController = TextEditingController();
 
-  ServerSocket _serverSocket;
+  // server socket object
+  ServerSocket? _serverSocket;
 
-  /// Connections for each client
+  // Connections for each client
   List<Socket> _sockets = [];
 
+  /// starts the server and listen for connections
   Future _startServer() async {
     _serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
-    print('port number: ${_serverSocket.port.toString()}');
+    print('port number: ${_serverSocket!.port.toString()}');
     setState(() {
-      _serverState = 'server running, port: ${_serverSocket.port.toString()}';
+      _serverStatus = 'server running, port: ${_serverSocket!.port.toString()}';
     });
-    _serverSocket.listen((Socket socket) {
+    _serverSocket!.listen((Socket socket) {
       print('connect new client'); // this function run when connect a client.
       socket.write('connection success');
       _sockets.add(socket);
@@ -35,29 +37,35 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
         print('data received'); // this function run when receive data from client.
         String data = new String.fromCharCodes(dataAsByte);
         setState(() {
-          _receivedData += data + '\n';
+          _receivedData += '$data\n';
         });
       });
     });
   }
 
+  /// sends the given message to all clients
   void _sendMessageToAllClients(String message) {
     for (Socket socket in _sockets) {
       socket.write(message);
     }
   }
 
+  /// close all connections and stop the server
   Future _stopServer() async {
-    for (Socket socket in _sockets) { // destroy all clients sockets
-      if (socket != null) socket.destroy();
+    // destroy all clients sockets
+    for (Socket socket in _sockets) {
+      socket.destroy();
     }
     _sockets.clear();
-    if (_serverSocket != null) await _serverSocket.close(); // close server
+
+    // close server
+    if (_serverSocket != null) await _serverSocket!.close();
     _serverSocket = null;
-    /// clear the data
+
+    // clear the data from ui
     setState(() {
       _receivedData = '';
-      _serverState = 'server stopped';
+      _serverStatus = 'server stopped';
     });
   }
 
@@ -71,7 +79,7 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            /// show data
+            // show received data from clients
             Expanded(
               child: Container(
                 alignment: Alignment.topCenter,
@@ -79,42 +87,49 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
                 padding: EdgeInsets.all(8),
                 color: Colors.black,
                 child: SingleChildScrollView(
-                  child: Text('recieved data:\n' + _receivedData),
+                  child: Text('received data:\n$_receivedData'),
                 ),
               ),
             ),
-            _space(),
-            /// data input
+            const SizedBox(height: 8),
+
+            // data input to send to clients
             TextField(
               controller: _dataInputController,
               decoration: InputDecoration(
                 hintText: 'Type to send data',
               ),
             ),
-            _space(),
-            /// send data button
+            const SizedBox(height: 8),
+
+            // send data button
             ElevatedButton(
               child: Text('send'),
               onPressed: () {
                 _sendMessageToAllClients(_dataInputController.text);
               },
             ),
-            _space(),
+            const SizedBox(height: 8),
+
+            // show server status
             Container(
-              child: Text(_serverState),
+              child: Text(_serverStatus),
             ),
-            _space(),
+            const SizedBox(height: 8),
+
+            // start and stop server buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                /// start server
+                // start server
                 ElevatedButton(
                   child: Text('Start Server'),
                   onPressed: () {
                     _startServer();
                   },
                 ),
-                /// stop server
+
+                // stop server
                 ElevatedButton(
                   child: Text('Stop Server'),
                   onPressed: () {
@@ -123,17 +138,10 @@ class _ScreenSocketServerState extends State<ScreenSocketServer> {
                 ),
               ],
             ),
-            _space(),
+            const SizedBox(height: 8),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _space({bool vertical = true}) {
-    return SizedBox(
-      height: vertical ? 8 : 0,
-      width: vertical ? 0 : 8,
     );
   }
 }

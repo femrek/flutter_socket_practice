@@ -9,24 +9,27 @@ class ScreenSocketClient extends StatefulWidget {
 }
 
 class _ScreenSocketClientState extends State<ScreenSocketClient> {
-
-  /// ui data
+  // ui variables
   String _receivedData = '';
-  String _connectionState = 'not connected';
+  String _connectionStatus = 'not connected';
 
+  // text input controller for data input to send
   TextEditingController _dataInputController = TextEditingController();
 
+  // text input controller for host and port
   TextEditingController _hostController = TextEditingController();
   TextEditingController _portController = TextEditingController();
 
-  Socket _socket;
+  // socket variable for connecting to socketServer running on other device
+  Socket? _socket;
 
+  /// start the connection
   Future _connect() async {
     final String host = _hostController.text;
-    final InternetAddress hostAddress = InternetAddress.tryParse(host);
-    final int port = int.tryParse(_portController.text);
+    final InternetAddress? hostAddress = InternetAddress.tryParse(host);
+    final int? port = int.tryParse(_portController.text);
 
-    /// validate host and port
+    // validate host and port
     if (hostAddress == null || port == null) {
       String err = '';
       if (hostAddress == null) {
@@ -37,43 +40,61 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
         err += 'port must be an integer\n';
         print('port number must be integer');
       }
-      err = err.substring(0, err.length-1); // delete the last \n 
-      setState(() { _connectionState = err; });
+      err = err.substring(0, err.length - 1); // delete the last \n
+      setState(() {
+        _connectionStatus = err;
+      });
       return;
     }
 
+    // connect to server
     try {
-      setState(() { _connectionState = 'connecting...'; });
-      _socket = await Socket.connect(hostAddress, port,);
-    } catch(e) {
-      setState(() { _connectionState = 'error when try connect'; });
+      setState(() {
+        _connectionStatus = 'connecting...';
+      });
+      _socket = await Socket.connect(
+        hostAddress,
+        port,
+      );
+    } catch (e) {
+      setState(() {
+        _connectionStatus = 'error when try connect';
+      });
       print(e);
       return;
     }
-    print('connect to ${_socket.remoteAddress.address}:${_socket.remotePort}');
+    assert(_socket != null);
+    print('connected:${_socket!.remoteAddress.address}:${_socket!.remotePort}');
     setState(() {
-      _connectionState = 'connected to $host:$port';
+      _connectionStatus = 'connected to $host:$port';
     });
-    _socket.listen((Uint8List dataAsByte) {
-      print('data received'); // this function run when receive data.
+
+    // this function is triggered when receive data from server
+    _socket!.listen((Uint8List dataAsByte) {
+      // convert data from byte to string
       final String data = String.fromCharCodes(dataAsByte);
+
+      // update the ui
       setState(() {
-        _receivedData += data + '\n';
+        _receivedData += '$data\n';
       });
     });
   }
 
+  /// if connected to server, send message to server
   void _sendMessageToServer(String message) {
-    if (_socket != null) _socket.write(message);
+    if (_socket != null) _socket!.write(message);
   }
 
+  /// destroy connection to server
   Future _disconnect() async {
-    if (_socket != null) _socket.destroy();
+    if (_socket != null) _socket!.destroy();
     _socket = null;
-    /// clear the data
+
+    // clear the data and update the ui
     setState(() {
       _receivedData = '';
-      _connectionState = 'disconnected';
+      _connectionStatus = 'disconnected';
     });
   }
 
@@ -87,7 +108,7 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            /// show data
+            // show received data
             Expanded(
               child: Container(
                 alignment: Alignment.topCenter,
@@ -95,81 +116,83 @@ class _ScreenSocketClientState extends State<ScreenSocketClient> {
                 height: 200,
                 color: Colors.black,
                 child: SingleChildScrollView(
-                  child: Text('recieved data:\n' + _receivedData),
+                  child: Text('received data:\n$_receivedData'),
                 ),
               ),
             ),
-            _space(),
-            /// data input
+            const SizedBox(height: 8),
+
+            // data input
             TextField(
               controller: _dataInputController,
               decoration: InputDecoration(
                 hintText: 'Type to send data',
               ),
             ),
-            _space(),
-            /// send data
+            const SizedBox(height: 8),
+
+            // send data
             ElevatedButton(
               child: Text('Send'),
               onPressed: () {
                 _sendMessageToServer(_dataInputController.text);
               },
             ),
-            _space(),
-            /// show connection state
+            const SizedBox(height: 8),
+
+            // show connection state
             Container(
-              child: Text(_connectionState),
+              child: Text(_connectionStatus),
             ),
-            _space(),
+            const SizedBox(height: 8),
+
+            // input for host and port
             Row(
               children: [
-                /// host input
+                // host input
                 Expanded(
                   flex: 3,
                   child: TextField(
-                    controller: _hostController,
-                  ),
+                      controller: _hostController,
+                      decoration: InputDecoration(
+                        hintText: 'host',
+                      )),
                 ),
-                SizedBox(width: 16,),
-                /// port input
+                SizedBox(width: 16),
+
+                // port input
                 Expanded(
                   flex: 2,
                   child: TextField(
-                    controller: _portController,
-                  ),
+                      controller: _portController,
+                      decoration: InputDecoration(
+                        hintText: 'port',
+                      )),
                 )
               ],
             ),
-            _space(),
+            const SizedBox(height: 8),
+
+            // connect and disconnect buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                /// connect
+                // connect
                 ElevatedButton(
                   child: Text('Connect'),
-                  onPressed: () {
-                    _connect();
-                  },
+                  onPressed: _connect,
                 ),
-                /// disconnect
+
+                // disconnect
                 ElevatedButton(
                   child: Text('Disconnect'),
-                  onPressed: () {
-                    _disconnect();
-                  },
+                  onPressed: _disconnect,
                 ),
               ],
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _space({bool vertical = true}) {
-    return SizedBox(
-      height: vertical ? 8 : 0,
-      width: vertical ? 0 : 8,
     );
   }
 }

@@ -1,4 +1,4 @@
-package com.example.socket_practice
+package com.example.flutter_socket_practice
 
 import io.flutter.embedding.android.FlutterActivity
 
